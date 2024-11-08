@@ -108,6 +108,13 @@
             font-weight: 100;
         }
 */
+
+        body {
+            /*font-family: Dongle;*/
+            font-family: Verdana, sans-serif;
+            /* font-size: x-large; */
+        }
+
         button {
             /*font-family: Dongle;*/
             font-family: Verdana, sans-serif;
@@ -139,26 +146,26 @@
 </head>
 
 <body bgcolor="#edece7">
-    <h0>Crey's esp32-box-opener serial configurator</h0>
+    <h1>Crey's esp32-box-opener serial configurator</h1>
+
+
+    <h2>Setup instructions:</h2>
+    <li>Get your APIkey: <a href="https://erwin.lol/box-opener" target="_blank">Mainnet</a></li>
+    <li>Connect to your board: press "Connect" and choose your board's serial port</li>
+    <li>Read current config by pressing "Read config" button below the table</li>
+    <li>Set up your wifi and apikey in the table</li>
+    <li>Press "Set config" button, wait few seconds</li>
+    <li>Press "Write config" button</li>
+    <li>Check terminal window for output</li>
+    <br>
+    If you want to use devnet get the API key from here: <a href="https://devnet.erwin.lol/box-opener" target="_blank">Devnet</a> and choose "devnet" in the network section.
+
     <h2>Serial port</h2>
-
-
     <div id="status">Status: not connected</div>
     <button id="connectButton">Connect</button>
     <button id="disconnectButton">Disconnect</button>
 
     <h2>Box-opener Settings</h2>
-
-
-
-
-
-
-
-
-
-
-
     <table>
         <tr>
             <td><label for="network">Network:</label></td>
