@@ -1,58 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!--
+ * ------------------------------------------------------------------------
+ * Project Name: esp32-ewn-box-opener serial configurator
+ * Description: Simple setup website for the esp32-ewn-box-opener
+ * Author: Crey
+ * Repository: https://github.com/cr3you/cr3you.github.io
+ * Date: 2024.11.21 
+ * Version: 1.0.1
+ * License: MIT
+ * ------------------------------------------------------------------------
+ -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crey's esp32-box-opener serial configurator</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.min.css">
+
+
     <style>
-        #output {
-            width: 80%;
-            height: 200px;
-            overflow-y: auto;
-            background-color: black;
-            color: rgb(225, 156, 8);
-            font-family: monospace;
-            white-space: pre-wrap;
-            /* This ensures that new lines are respected */
-            word-wrap: normal;
-        }
-
-        #manualCommand {
-            width: 80%;
-        }
-
-        /*
-
         table {
             border-collapse: collapse;
-        }
-
-        table,
-        td,
-        th {
-            border: 1px solid black;
-        }
-
-        td {
-            vertical-align: center;
-        }
-
-        td {
-            display: flex;
-            align-items: center;
-
-        }
-
-*/
-
-
-
-
-        table {
-            /*width: 100%;*/
-            border-collapse: collapse;
-            /*margin-top: 10px;*/
         }
 
         td {
@@ -65,153 +37,219 @@
             display: block;
             text-align: left;
         }
-
-        input {
-            width: 90%;
-            /*padding: 5px;*/
-            /* text-align: center; */
-        }
     </style>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dongle&family=Quicksand:wght@100..700&display=swap');
-
-        /*
-        .dongle-light {
-            font-family: "Dongle", serif;
-            font-weight: 100;
-            font-style: normal;
-        }
-
-        .dongle-regular {
-            font-family: "Dongle", serif;
-            font-weight: 400;
-            font-style: normal;
-        }
-*/
-        /*
-        body {
-            font-family: Dongle, serif;
-            font-weight: 100;
-        }
-*/
-        label,input,textarea {
-            /*font-family: Dongle;*/
+        label,
+        input,
+        textarea {
             font-family: Verdana, sans-serif;
-            /* font-size: x-large; */
-            /* font-weight: 100; */
         }
-
-        /*        div {
-            font-family: Dongle;
-            font-size: x-large;
-            font-weight: 100;
-        }
-*/
 
         body {
-            /*font-family: Dongle;*/
             font-family: Verdana, sans-serif;
-            /* font-size: x-large; */
         }
 
         button {
-            /*font-family: Dongle;*/
             font-family: Verdana, sans-serif;
-            /* font-size: x-large; */
         }
 
 
         h0 {
-            /* font-family: Dongle; */
             font-family: Verdana, sans-serif;
             font-size: xx-large;
-            /* font-weight: 300; */
         }
 
         h1 {
-            /* font-family: Dongle; */
             font-family: Verdana, sans-serif;
             font-size: xx-large;
-            /* font-weight: 300; */
         }
 
         h2 {
-            /* font-family: Dongle; */
             font-family: Verdana, sans-serif;
             font-size: x-large;
-            /* font-weight: 300; */
         }
     </style>
+
+
+
+    <style>
+        /* container for the whole website */
+        .container {
+            display: flex;
+            width: 100%;
+            /* height: 100vh; */
+            height: calc(100vh - 120px);
+            /* header cutoff */
+        }
+
+        /* left part */
+        .left {
+            width: 50%;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        /* right part */
+        .right {
+            width: 50%;
+            padding: 10px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            /* vertical stretch */
+            height: 100%;
+        }
+
+        #terminal-container {
+            flex-grow: 1;
+            width: 100%;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #2E2B1F;
+            color: #F4A300;
+            font-family: 'Monaco', monospace;
+            font-size: 16px;
+        }
+
+        /* input and switch over terminal */
+        .command-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2px;
+        }
+
+        #manualCommand {
+            width: 80%;
+        }
+
+        #sendButton {
+            width: 20%;
+        }
+    </style>
+
 </head>
 
 <body bgcolor="#edece7">
     <h1>Crey's esp32-box-opener serial configurator</h1>
 
+    <div class="container">
+        <div class="left">
+            <h2>Setup instructions:</h2>
+            <li>Get your APIkey: <a href="https://erwin.lol/box-opener" target="_blank">Mainnet</a></li>
+            <li>Connect to your board: press "Connect" and choose your board's serial port</li>
+            <li>Read current config by pressing "Read config" button below the table</li>
+            <li>Set up your wifi and apikey in the table</li>
+            <li>Press "Set config" button, wait few seconds</li>
+            <li>Press "Write config" button</li>
+            <li>Check terminal window for output</li>
+            <br>
+            If you want to use devnet get the API key from here: <a href="https://devnet.erwin.lol/box-opener"
+                target="_blank">Devnet</a> and choose "devnet" in the network section.
 
-    <h2>Setup instructions:</h2>
-    <li>Get your APIkey: <a href="https://erwin.lol/box-opener" target="_blank">Mainnet</a></li>
-    <li>Connect to your board: press "Connect" and choose your board's serial port</li>
-    <li>Read current config by pressing "Read config" button below the table</li>
-    <li>Set up your wifi and apikey in the table</li>
-    <li>Press "Set config" button, wait few seconds</li>
-    <li>Press "Write config" button</li>
-    <li>Check terminal window for output</li>
-    <br>
-    If you want to use devnet get the API key from here: <a href="https://devnet.erwin.lol/box-opener" target="_blank">Devnet</a> and choose "devnet" in the network section.
+            <h2>Serial port</h2>
+            <div id="status">Status: not connected</div>
+            <button id="connectButton">Connect</button>
+            <button id="disconnectButton">Disconnect</button>
 
-    <h2>Serial port</h2>
-    <div id="status">Status: not connected</div>
-    <button id="connectButton">Connect</button>
-    <button id="disconnectButton">Disconnect</button>
+            <h2>Box-opener Settings</h2>
+            <table>
+                <tr>
+                    <td><label for="network">Network:</label></td>
+                    <td><select id="network" name="network">
+                            <option value="mainnet" selected>mainnet</option>
+                            <option value="devnet">devnet</option>
+                        </select><br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="ssid">Wifi SSID:</label></td>
+                    <td><input type="text" id="ssid"><br><br></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Wifi password:</label></td>
+                    <td><input type="text" id="password"><br><br></td>
+                </tr>
+                <tr>
+                    <td><label for="apiKey">API Key:</label></td>
+                    <td><textarea id="apiKey" rows="8" cols="32"></textarea></td>
+                </tr>
+            </table>
 
-    <h2>Box-opener Settings</h2>
-    <table>
-        <tr>
-            <td><label for="network">Network:</label></td>
-            <td><select id="network" name="network">
-                    <option value="mainnet" selected>mainnet</option>
-                    <option value="devnet">devnet</option>
-                </select><br><br>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="ssid">Wifi SSID:</label></td>
-            <td><input type="text" id="ssid"><br><br></td>
-        </tr>
-        <tr>
-            <td><label for="password">Wifi password:</label></td>
-            <td><input type="text" id="password"><br><br></td>
-        </tr>
-        <tr>
-            <td><label for="apiKey">API Key:</label></td>
-            <td><textarea id="apiKey" rows="8" cols="32"></textarea></td>
-        </tr>
-    </table>
+            <button id="readButton">Read config</button> ->
+            <button id="setButton">Set config</button> ->
+            <button id="writeButton">Write config</button><br><br>
+            <button id="delButton">Delete config</button>
+            <button id="restartButton">Restart</button>
+        </div>
 
+        <div class="right">
+            <h2>Terminal</h2>
+            <div class="command-container">
+                <input type="text" id="manualCommand" placeholder="Enter command">
+                <button id="sendButton">Send</button>
+            </div>
+            <div id="terminal-container"></div>
+        </div>
+    </div>
 
-
-
-
-    <button id="readButton">Read config</button> ->
-    <button id="setButton">Set config</button> ->
-    <button id="writeButton">Write config</button><br><br>
-    <button id="delButton">Delete config</button>
-    <button id="restartButton">Restart</button>
-
-    <h2>Terminal</h2>
-    <div id="output"></div><br>
-
-    <input type="text" id="manualCommand" placeholder="Enter command">
-    <button id="sendButton">Send</button>
 
     <script>
         let port;
         let reader;
-        let outputArea = document.getElementById('output');
         let statusDiv = document.getElementById('status');
         let textDecoder = new TextDecoder();
-        let buffer = ''; // Buffer to store partial data
+
+        const terminal = new Terminal({
+            convertEol: true,
+            cursorBlink: true,
+            overviewRulerWidth: 0,
+            fontFamily: "'Monaco', monospace",
+            fontSize: 16,
+            theme: {
+                background: '#2E2B1F',
+                foreground: '#F4A300',
+                cursor: '#F4A300',
+                selectionBackground: '#7F5C2A',
+                selectionForeground: '#2E2B1F',
+            }
+        });
+
+        terminal.open(document.getElementById('terminal-container'));
+
+        terminal.writeln('Welcome to Crey\'s esp32-box-opener serial configurator.');
+        terminal.writeln('Please read instructions on the left.');
+        terminal.writeln('You can type "help" after connecting to your board to get list of commands');
+
+        var manual_command = "";
+        terminal.onKey(({ key, domEvent }) => {
+            if (key.charCodeAt(0) == 13) {
+                terminal.write('\n');
+                sendCommand(manual_command);
+                manual_command = "";
+
+            }
+            terminal.write(key);
+            manual_command += key;
+        });
+
+        function resizeTerminal() {
+            const container = document.getElementById('terminal-container');
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+            const cols = Math.floor(width / 10);  // char width in px
+            const rows = Math.floor(height / 20); // char height in px
+            terminal.resize(cols, rows);
+        }
+
+        window.addEventListener('resize', resizeTerminal);
+
+        resizeTerminal();
+
 
         // Function to connect to the serial port
         async function connect() {
@@ -256,8 +294,7 @@
 
                     var l = textDecoder.decode(value, { stream: true });
                     if (value) {
-                        outputArea.innerHTML += l;
-                        outputArea.scrollTop = outputArea.scrollHeight;  // Auto-scroll to bottom
+                        terminal.write(l);
 
                         //-------- read config and setup -----------
                         param_line += l;
@@ -298,6 +335,7 @@
                 await writer.write(new TextEncoder().encode(command + "\n"));
                 writer.releaseLock();
             }
+            //terminal.writeln(">"+command);
         }
 
         // Handle the Set config button
